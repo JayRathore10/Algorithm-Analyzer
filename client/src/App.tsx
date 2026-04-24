@@ -6,6 +6,7 @@ function App() {
   const [array, setArray] = useState("");
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState([]);
+  const [algo, setAlgo] = useState("");
 
   useEffect(() => {
     const call = async () => {
@@ -20,7 +21,7 @@ function App() {
   }, []);
 
   const handleSort = async () => {
-    const res = await axios.post("http://localhost:3000/api/sort/bubble-sort", {
+    const res = await axios.post(`http://localhost:3000/api/sort/${algo}`, {
       array: array.split(",").map(Number),
     });
     setSteps(res.data.steps);
@@ -38,7 +39,7 @@ function App() {
       console.log("l");
 
       if (i >= steps.length) clearInterval(interval);
-    }, 1000); // speed (ms)
+    }, 700); 
 
     return () => clearInterval(interval);
   }, [steps]);
@@ -53,6 +54,15 @@ function App() {
         placeholder="Enter numbers"
       />
 
+      <select value={algo} onChange={(e) => setAlgo(e.target.value)}>
+        <option value="">Select Algorithm</option>
+        <option value="bubble-sort">Bubble Sort</option>
+        <option value="selection-sort">Selection Sort</option>
+        <option value="insertion-sort">Insertion Sort</option>
+        <option value="merge-sort">Merge Sort</option>
+        <option value="quick-sort">Quick Sort</option>
+      </select>
+
       <button onClick={handleSort}>Sort</button>
 
       <div>
@@ -66,7 +76,7 @@ function App() {
           <div
             key={i}
             className="bar"
-            style={{ height: `${num * 5}px`}}
+            style={{ height: `${num * 5}px` }}
           >
             {num}
           </div>

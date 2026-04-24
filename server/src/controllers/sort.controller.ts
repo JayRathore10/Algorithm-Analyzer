@@ -1,5 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 
+type AlgoInfo = {
+  name: string;
+  time: string;
+  space: string;
+};
+
 const bubbleSortAlgo = (array: number[]) => {
   let a = [...array];
   let steps = [];
@@ -145,11 +151,38 @@ const algoMap: Record<string, Function> = {
   "quick-sort": quickSortAlgo,
 };
 
+const algoInfoMap: Record<string, AlgoInfo> = {
+  "bubble-sort": {
+    name: "Bubble Sort",
+    time: "O(n²)",
+    space: "O(1)",
+  },
+  "selection-sort": {
+    name: "Selection Sort",
+    time: "O(n²)",
+    space: "O(1)",
+  },
+  "insertion-sort": {
+    name: "Insertion Sort",
+    time: "O(n²)",
+    space: "O(1)",
+  },
+  "merge-sort": {
+    name: "Merge Sort",
+    time: "O(n log n)",
+    space: "O(n)",
+  },
+  "quick-sort": {
+    name: "Quick Sort",
+    time: "O(n log n) avg, O(n²) worst",
+    space: "O(log n)",
+  },
+};
+
 export const bubbleSort = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { array } = req.body;
     const { algo } = req.params;
-    let start = Date.now();
 
     const sortFunction = algoMap[algo];
 
@@ -159,14 +192,12 @@ export const bubbleSort = async (req: Request, res: Response, next: NextFunction
 
     const steps = sortFunction(array);
 
-    let end = Date.now();
-
     return res.json({
       steps,
-      sorted: steps[steps.length - 1] || array,
-      time: end - start
+      sorted: steps[steps.length - 1] || array,  
+      timeComplexity : algoInfoMap[algo].time , 
+      spaceComplexity : algoInfoMap[algo].space 
     });
-
 
   } catch (err) {
     next(err);

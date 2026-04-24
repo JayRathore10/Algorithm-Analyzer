@@ -7,6 +7,8 @@ function App() {
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState([]);
   const [algo, setAlgo] = useState("");
+  const [tc, setTc] = useState("");
+  const [sc, setSc] = useState("");
 
   useEffect(() => {
     const call = async () => {
@@ -21,10 +23,16 @@ function App() {
   }, []);
 
   const handleSort = async () => {
-    const res = await axios.post(`http://localhost:3000/api/sort/${algo}`, {
-      array: array.split(",").map(Number),
-    });
-    setSteps(res.data.steps);
+    try {
+      const res = await axios.post(`http://localhost:3000/api/sort/${algo}`, {
+        array: array.split(",").map(Number),
+      });
+      setSteps(res.data.steps);
+      setTc(res.data.timeComplexity);
+      setSc(res.data.spaceComplexity);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   useEffect(() => {
@@ -36,10 +44,8 @@ function App() {
       setCurrentStep(steps[i]);
       i++;
 
-      console.log("l");
-
       if (i >= steps.length) clearInterval(interval);
-    }, 700); 
+    }, 500);
 
     return () => clearInterval(interval);
   }, [steps]);
@@ -82,7 +88,12 @@ function App() {
           </div>
         ))}
       </div>
-
+      <div>
+        Time Complexity : {tc}
+      </div>
+      <div>
+        Space Complexity : {sc}
+      </div>
     </div>
   );
 

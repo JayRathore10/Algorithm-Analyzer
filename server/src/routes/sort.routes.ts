@@ -3,6 +3,6 @@ import { bubbleSort } from "../controllers/sort.controller";
 
 const router = Router();
 
-router.post("/bubble-sort" , bubbleSort);
+router.post("/:algo" , bubbleSort);
 
 export default router;

@@ -104,7 +104,7 @@ function App() {
               key={i}
               className="bar"
               style={{
-                height: `${Math.max((num / maxVal) * 250, 5)}px`,
+                height: `${Math.max((num / maxVal) * 280, 30)}px`,
                 width: `${Math.max(15, 400 / currentStep.length)}px`
               }}
             >

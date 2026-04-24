@@ -6,30 +6,55 @@ type AlgoInfo = {
   space: string;
 };
 
-const bubbleSortAlgo = (array: number[]) => {
-  let a = [...array];
-  let steps = [];
+type Step = {
+  array: number[];
+  comparing?: number[];
+};
 
-  for (let i = 0; i < a.length; i++) {
-    for (let j = 0; j < a.length - i - 1; j++) {
+/* ===================== BUBBLE SORT ===================== */
+export const bubbleSortAlgo = (array: number[]) => {
+  let a = [...array];
+  let steps: Step[] = [];
+
+  let n = a.length;
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+
+      steps.push({
+        array: [...a],
+        comparing: [j, j + 1]
+      });
+
       if (a[j] > a[j + 1]) {
         [a[j], a[j + 1]] = [a[j + 1], a[j]];
-        steps.push([...a]);
+
+        steps.push({
+          array: [...a],
+          comparing: [j, j + 1]
+        });
       }
     }
   }
 
   return steps;
-}
+};
 
-const selectionSortAlgo = (array: number[]) => {
+/* ===================== SELECTION SORT ===================== */
+export const selectionSortAlgo = (array: number[]) => {
   let a = [...array];
-  let steps = [];
+  let steps: Step[] = [];
 
   for (let i = 0; i < a.length; i++) {
     let minIndex = i;
 
     for (let j = i + 1; j < a.length; j++) {
+
+      steps.push({
+        array: [...a],
+        comparing: [j, minIndex]
+      });
+
       if (a[j] < a[minIndex]) {
         minIndex = j;
       }
@@ -37,81 +62,122 @@ const selectionSortAlgo = (array: number[]) => {
 
     if (minIndex !== i) {
       [a[i], a[minIndex]] = [a[minIndex], a[i]];
-      steps.push([...a]);
+
+      steps.push({
+        array: [...a],
+        comparing: [i, minIndex]
+      });
     }
   }
 
   return steps;
-}
+};
 
-const insertionSortAlgo = (array: number[]) => {
+/* ===================== INSERTION SORT ===================== */
+export const insertionSortAlgo = (array: number[]) => {
   let a = [...array];
-  let steps = [];
+  let steps: Step[] = [];
 
   for (let i = 1; i < a.length; i++) {
     let key = a[i];
     let j = i - 1;
 
-    while (j >= 0 && a[j] > key) {
-      a[j + 1] = a[j];
-      j--;
-      steps.push([...a]);
+    while (j >= 0) {
+
+      steps.push({
+        array: [...a],
+        comparing: [j, j + 1]
+      });
+
+      if (a[j] > key) {
+        a[j + 1] = a[j];
+        j--;
+      } else break;
+
+      steps.push({
+        array: [...a],
+        comparing: [j, j + 1]
+      });
     }
 
     a[j + 1] = key;
-    steps.push([...a]);
+
+    steps.push({
+      array: [...a],
+      comparing: [j + 1]
+    });
   }
 
   return steps;
-}
+};
 
-const mergeSortAlgo = (array: number[]) => {
-  let steps: number[][] = [];
+/* ===================== MERGE SORT ===================== */
+export const mergeSortAlgo = (array: number[]) => {
   let a = [...array];
+  let steps: Step[] = [];
 
-  const mergeSort = (arr: number[], l: number, r: number) => {
+  const mergeSort = (l: number, r: number) => {
     if (l >= r) return;
 
     let mid = Math.floor((l + r) / 2);
 
-    mergeSort(arr, l, mid);
-    mergeSort(arr, mid + 1, r);
-    merge(arr, l, mid, r);
+    mergeSort(l, mid);
+    mergeSort(mid + 1, r);
+    merge(l, mid, r);
   };
 
-  const merge = (arr: number[], l: number, m: number, r: number) => {
-    let left = arr.slice(l, m + 1);
-    let right = arr.slice(m + 1, r + 1);
+  const merge = (l: number, m: number, r: number) => {
+    let left = a.slice(l, m + 1);
+    let right = a.slice(m + 1, r + 1);
 
     let i = 0, j = 0, k = l;
 
     while (i < left.length && j < right.length) {
+
+      steps.push({
+        array: [...a],
+        comparing: [k]
+      });
+
       if (left[i] <= right[j]) {
-        arr[k++] = left[i++];
+        a[k++] = left[i++];
       } else {
-        arr[k++] = right[j++];
+        a[k++] = right[j++];
       }
-      steps.push([...arr]);
+
+      steps.push({
+        array: [...a],
+        comparing: [k - 1]
+      });
     }
 
     while (i < left.length) {
-      arr[k++] = left[i++];
-      steps.push([...arr]);
+      a[k++] = left[i++];
+
+      steps.push({
+        array: [...a],
+        comparing: [k - 1]
+      });
     }
 
     while (j < right.length) {
-      arr[k++] = right[j++];
-      steps.push([...arr]);
+      a[k++] = right[j++];
+
+      steps.push({
+        array: [...a],
+        comparing: [k - 1]
+      });
     }
   };
 
-  mergeSort(a, 0, a.length - 1);
+  mergeSort(0, a.length - 1);
   return steps;
-}
+};
 
-const quickSortAlgo = (array: number[]) => {
+/* ===================== QUICK SORT ===================== */
+export const quickSortAlgo = (array: number[]) => {
   let a = [...array];
-  let steps: number[][] = [];
+  let steps: Step[] = [];
 
   const quickSort = (low: number, high: number) => {
     if (low < high) {
@@ -126,22 +192,36 @@ const quickSortAlgo = (array: number[]) => {
     let i = low - 1;
 
     for (let j = low; j < high; j++) {
+
+      steps.push({
+        array: [...a],
+        comparing: [j, high]
+      });
+
       if (a[j] < pivot) {
         i++;
         [a[i], a[j]] = [a[j], a[i]];
-        steps.push([...a]);
+
+        steps.push({
+          array: [...a],
+          comparing: [i, j]
+        });
       }
     }
 
     [a[i + 1], a[high]] = [a[high], a[i + 1]];
-    steps.push([...a]);
+
+    steps.push({
+      array: [...a],
+      comparing: [i + 1, high]
+    });
 
     return i + 1;
   };
 
   quickSort(0, a.length - 1);
   return steps;
-}
+};
 
 const algoMap: Record<string, Function> = {
   "bubble-sort": bubbleSortAlgo,
@@ -194,9 +274,9 @@ export const bubbleSort = async (req: Request, res: Response, next: NextFunction
 
     return res.json({
       steps,
-      sorted: steps[steps.length - 1] || array,  
-      timeComplexity : algoInfoMap[algo].time , 
-      spaceComplexity : algoInfoMap[algo].space 
+      sorted: steps[steps.length - 1] || array,
+      timeComplexity: algoInfoMap[algo].time,
+      spaceComplexity: algoInfoMap[algo].space
     });
 
   } catch (err) {

@@ -2,13 +2,19 @@ import { useEffect, useState } from 'react';
 import axios from "axios";
 import './App.css';
 
+type Step = {
+  array: number[];
+  comparing?: number[];
+};
+
 function App() {
   const [array, setArray] = useState("");
-  const [steps, setSteps] = useState([]);
-  const [currentStep, setCurrentStep] = useState([]);
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [currentStep, setCurrentStep] = useState<number[]>([]);
   const [algo, setAlgo] = useState("");
   const [tc, setTc] = useState("");
   const [sc, setSc] = useState("");
+  const [comparing, setComparing] = useState<number[]>([]);
 
   useEffect(() => {
     const call = async () => {
@@ -41,14 +47,15 @@ function App() {
     let i = 0;
 
     const interval = setInterval(() => {
-      setCurrentStep(steps[i]);
+      setCurrentStep(steps[i].array);
+      setComparing(steps[i].comparing || []);
       i++;
 
       if (i >= steps.length) clearInterval(interval);
     }, 500);
 
     return () => clearInterval(interval);
-  }, [steps]);
+  }, [steps, setCurrentStep]);
 
   const maxVal = Math.max(...currentStep, 1);
 
@@ -105,10 +112,13 @@ function App() {
               className="bar"
               style={{
                 height: `${Math.max((num / maxVal) * 280, 30)}px`,
-                width: `${Math.max(15, 400 / currentStep.length)}px`
+                width: `${Math.max(15, 400 / currentStep.length)}px`,
+                backgroundColor: comparing.includes(i)
+                  ? "#e63946" 
+                  : "#4361ee" 
               }}
             >
-              {num}
+              <span className="bar-text">{num}</span>
             </div>
           ))}
         </div>

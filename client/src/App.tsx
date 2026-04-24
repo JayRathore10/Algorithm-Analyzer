@@ -5,8 +5,9 @@ import './App.css';
 function App() {
   const [array, setArray] = useState("");
   const [result, setResult] = useState([]);
+  const [steps, setSteps] = useState([]);
+  const [currentStep, setCurrentStep] = useState([]);
 
-  
   useEffect(() => {
     const call = async () => {
       try {
@@ -24,7 +25,25 @@ function App() {
       array: array.split(",").map(Number),
     });
     setResult(res.data.sorted);
+    setSteps(res.data.steps);
   }
+
+  useEffect(() => {
+    if (steps.length === 0) return;
+
+    let i = 0;
+
+    const interval = setInterval(() => {
+      setCurrentStep(steps[i]);
+      i++;
+
+      console.log("l");
+
+      if (i >= steps.length) clearInterval(interval);
+    }, 1000); // speed (ms)
+
+    return () => clearInterval(interval);
+  }, [steps]);
 
   return (
     <div>
@@ -43,6 +62,19 @@ function App() {
           <span key={i}>{num} </span>
         ))}
       </div>
+
+      <div className="bar-container">
+        {currentStep.map((num, i) => (
+          <div
+            key={i}
+            className="bar"
+            style={{ height: `${num * 5}px`}}
+          >
+            {num}
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 

@@ -53,59 +53,65 @@ function App() {
   const maxVal = Math.max(...currentStep, 1);
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Sorting Analyzer</h1>
 
-      <input
-        value={array}
-        onChange={(e) => setArray(e.target.value)}
-        placeholder="Enter numbers"
-      />
+      <div className="controls">
+        <input
+          value={array}
+          onChange={(e) => setArray(e.target.value)}
+          placeholder="Enter numbers"
+        />
 
-      <select value={algo} onChange={(e) => setAlgo(e.target.value)}>
-        <option value="">Select Algorithm</option>
-        <option value="bubble-sort">Bubble Sort</option>
-        <option value="selection-sort">Selection Sort</option>
-        <option value="insertion-sort">Insertion Sort</option>
-        <option value="merge-sort">Merge Sort</option>
-        <option value="quick-sort">Quick Sort</option>
-      </select>
+        <select value={algo} onChange={(e) => setAlgo(e.target.value)}>
+          <option value="">Select Algorithm</option>
+          <option value="bubble-sort">Bubble Sort</option>
+          <option value="selection-sort">Selection Sort</option>
+          <option value="insertion-sort">Insertion Sort</option>
+          <option value="merge-sort">Merge Sort</option>
+          <option value="quick-sort">Quick Sort</option>
+        </select>
 
-      <button onClick={handleSort}>Sort</button>
+        <button onClick={handleSort}>Sort</button>
+      </div>
 
-      <div className="sorted-array">
-        <h3>Sorted Array</h3>
-        <div className="array-values">
+      <div className="main-grid">
+        <div>
+          <div className="sorted-array">
+            <h3>Sorted Array</h3>
+            <div className="array-values">
+              {currentStep.map((num, i) => (
+                <span key={i}>{num}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="complexity">
+            <div>
+              <strong>Time Complexity</strong>
+              <p>{tc}</p>
+            </div>
+            <div>
+              <strong>Space Complexity</strong>
+              <p>{sc}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bar-container">
           {currentStep.map((num, i) => (
-            <span key={i}>{num}</span>
+            <div
+              key={i}
+              className="bar"
+              style={{
+                height: `${Math.max((num / maxVal) * 250, 5)}px`,
+                width: `${Math.max(15, 400 / currentStep.length)}px`
+              }}
+            >
+              {num}
+            </div>
           ))}
         </div>
-      </div>
-
-      <div className="complexity">
-        <div>
-          <strong>Time Complexity</strong>
-          <p>{tc}</p>
-        </div>
-        <div>
-          <strong>Space Complexity</strong>
-          <p>{sc}</p>
-        </div>
-      </div>
-
-      <div className="bar-container">
-        {currentStep.map((num, i) => (
-          <div
-            key={i}
-            className="bar"
-            style={{
-              height: `${Math.max((num / maxVal) * 300, 5)}px`,
-              width: `${Math.max(20, 500 / currentStep.length)}px`
-            }}
-          >
-            {num}
-          </div>
-        ))}
       </div>
     </div>
   );

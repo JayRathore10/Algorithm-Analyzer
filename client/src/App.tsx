@@ -50,6 +50,8 @@ function App() {
     return () => clearInterval(interval);
   }, [steps]);
 
+  const maxVal = Math.max(...currentStep, 1);
+
   return (
     <div>
       <h1>Sorting Analyzer</h1>
@@ -71,10 +73,24 @@ function App() {
 
       <button onClick={handleSort}>Sort</button>
 
-      <div>
-        {currentStep.map((num, i) => (
-          <span key={i}>{num} </span>
-        ))}
+      <div className="sorted-array">
+        <h3>Sorted Array</h3>
+        <div className="array-values">
+          {currentStep.map((num, i) => (
+            <span key={i}>{num}</span>
+          ))}
+        </div>
+      </div>
+
+      <div className="complexity">
+        <div>
+          <strong>Time Complexity</strong>
+          <p>{tc}</p>
+        </div>
+        <div>
+          <strong>Space Complexity</strong>
+          <p>{sc}</p>
+        </div>
       </div>
 
       <div className="bar-container">
@@ -82,17 +98,14 @@ function App() {
           <div
             key={i}
             className="bar"
-            style={{ height: `${num * 5}px` }}
+            style={{
+              height: `${Math.max((num / maxVal) * 300, 5)}px`,
+              width: `${Math.max(20, 500 / currentStep.length)}px`
+            }}
           >
             {num}
           </div>
         ))}
-      </div>
-      <div>
-        Time Complexity : {tc}
-      </div>
-      <div>
-        Space Complexity : {sc}
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import './App.css';
 
 function App() {
   const [array, setArray] = useState("");
-  const [result, setResult] = useState([]);
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState([]);
 
@@ -24,7 +23,6 @@ function App() {
     const res = await axios.post("http://localhost:3000/api/sort/bubble-sort", {
       array: array.split(",").map(Number),
     });
-    setResult(res.data.sorted);
     setSteps(res.data.steps);
   }
 
@@ -58,7 +56,7 @@ function App() {
       <button onClick={handleSort}>Sort</button>
 
       <div>
-        {result.map((num, i) => (
+        {currentStep.map((num, i) => (
           <span key={i}>{num} </span>
         ))}
       </div>

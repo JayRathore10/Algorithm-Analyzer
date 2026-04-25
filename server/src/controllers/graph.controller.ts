@@ -1,12 +1,6 @@
-import { Request , Response , NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 
 type Step = {
-  array?: number[];              
-  comparing?: number[];
-
-  nodes?: number[];              
-  edges?: [number, number][];    
-
   currentNode?: number;
   visited?: number[];
   distances?: Record<number, number>;
@@ -17,28 +11,28 @@ export const dijkstraAlgo = (
   edges: [number, number, number][],
   source: number
 ) => {
-  let adj: Record<number, [number, number][]> = {};
+  const adj: Record<number, [number, number][]> = {};
+  const steps: Step[] = [];
 
   // build graph
   for (let i = 0; i < n; i++) adj[i] = [];
 
-  for (let [u, v, w] of edges) {
+  for (const [u, v, w] of edges) {
     adj[u].push([v, w]);
-    adj[v].push([u, w]); // remove if directed
+    adj[v].push([u, w]);
   }
 
-  let dist: Record<number, number> = {};
-  let visited: number[] = [];
-  let steps: Step[] = [];
+  const dist: Record<number, number> = {};
+  const visited: number[] = [];
 
   for (let i = 0; i < n; i++) dist[i] = Infinity;
   dist[source] = 0;
 
-  let pq: [number, number][] = [[0, source]];
+  const pq: [number, number][] = [[0, source]];
 
   while (pq.length) {
-    pq.sort((a, b) => a[0] - b[0]); // simple PQ
-    let [d, node] = pq.shift()!;
+    pq.sort((a, b) => a[0] - b[0]);
+    const [_, node] = pq.shift()!;
 
     if (visited.includes(node)) continue;
 
@@ -47,10 +41,10 @@ export const dijkstraAlgo = (
     steps.push({
       currentNode: node,
       visited: [...visited],
-      distances: { ...dist }
+      distances: { ...dist },
     });
 
-    for (let [nei, w] of adj[node]) {
+    for (const [nei, w] of adj[node]) {
       if (dist[node] + w < dist[nei]) {
         dist[nei] = dist[node] + w;
         pq.push([dist[nei], nei]);
@@ -58,17 +52,20 @@ export const dijkstraAlgo = (
         steps.push({
           currentNode: node,
           visited: [...visited],
-          distances: { ...dist }
+          distances: { ...dist },
         });
       }
     }
   }
 
-  return steps;
-};
+  // final clean step
+  steps.push({
+    currentNode: -1,
+    visited: [...visited],
+    distances: { ...dist },
+  });
 
-const algoMap: Record<string, Function> ={
-  "dijkstra" : dijkstraAlgo
+  return steps;
 };
 
 export const graphAlgo = async (
@@ -77,31 +74,20 @@ export const graphAlgo = async (
   next: NextFunction
 ) => {
   try {
-    const { algo } = req.params;
-
-    const graphFunction = algoMap[algo];
-
-    if (!graphFunction) {
-      throw new Error("Invalid algorithm");
-    }
-
     const { n, edges, source } = req.body;
 
-    // basic validation
     if (!n || !edges || source === undefined) {
-      throw new Error("Missing graph inputs (n, edges, source)");
+      throw new Error("Missing inputs");
     }
 
-    const steps = graphFunction(n, edges, source);
+    const steps = dijkstraAlgo(n, edges, source);
 
-    return res.json({
+    res.json({
       steps,
-      result: steps[steps.length - 1] || {},
-      timeComplexity: "O((V + E) log V)",   // Dijkstra
-      spaceComplexity: "O(V)"
+      timeComplexity: "O((V + E) log V)",
+      spaceComplexity: "O(V)",
     });
-
   } catch (err) {
     next(err);
   }
-};
+};  

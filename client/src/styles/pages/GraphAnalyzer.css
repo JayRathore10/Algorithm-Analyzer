@@ -1,0 +1,112 @@
+.app-graph {
+  text-align: center;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.title-graph {
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.controls-graph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  margin-bottom: 25px;
+}
+
+.input-graph {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  min-width: 120px;
+  transition: all 0.2s ease;
+}
+
+.input-graph:focus {
+  outline: none;
+  border-color: #4361ee;
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+.btn-graph {
+  background: #4361ee;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-graph:hover {
+  background: #3a56d4;
+}
+
+.graph-box-graph {
+  display: flex;
+  justify-content: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.svg-graph {
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.svg-graph line {
+  stroke: #cbd5e0;
+  stroke-width: 2;
+}
+
+.svg-graph text {
+  font-size: 12px;
+  fill: #2d3748;
+}
+
+.node-graph circle {
+  transition: all 0.2s ease;
+}
+
+.info-graph {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.info-graph p {
+  margin: 0;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .controls-graph {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .info-graph {
+    flex-direction: column;
+    text-align: center;
+  }
+}

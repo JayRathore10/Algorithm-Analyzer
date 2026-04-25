@@ -29,6 +29,17 @@ function App() {
   }, []);
 
   const handleSort = async () => {
+
+    if (!algo) {
+      alert("Please select a sorting algorithm first!");
+      return;
+    }
+
+    if (!array.trim()) {
+      alert("Please enter an array!");
+      return;
+    }
+
     try {
       const res = await axios.post(`http://localhost:3000/api/sort/${algo}`, {
         array: array.split(",").map(Number),
@@ -45,14 +56,18 @@ function App() {
     if (steps.length === 0) return;
 
     let i = 0;
-
+    
     const interval = setInterval(() => {
+      if (i >= steps.length) {
+        setComparing([]);
+        clearInterval(interval);
+        return ;
+      }
       setCurrentStep(steps[i].array);
       setComparing(steps[i].comparing || []);
       i++;
-
-      if (i >= steps.length) clearInterval(interval);
-    }, 500);
+      
+    }, 100);
 
     return () => clearInterval(interval);
   }, [steps, setCurrentStep]);
@@ -114,8 +129,8 @@ function App() {
                 height: `${Math.max((num / maxVal) * 280, 30)}px`,
                 width: `${Math.max(15, 400 / currentStep.length)}px`,
                 backgroundColor: comparing.includes(i)
-                  ? "#e63946" 
-                  : "#4361ee" 
+                  ? "#e63946"
+                  : "#4361ee"
               }}
             >
               <span className="bar-text">{num}</span>

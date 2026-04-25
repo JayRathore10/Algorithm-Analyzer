@@ -7,11 +7,18 @@ type AlgoInfo = {
 };
 
 type Step = {
-  array: number[];
+  array?: number[];              
   comparing?: number[];
+
+  nodes?: number[];              
+  edges?: [number, number][];    
+
+  currentNode?: number;
+  visited?: number[];
+  distances?: Record<number, number>;
 };
 
-/* ===================== BUBBLE SORT ===================== */
+
 export const bubbleSortAlgo = (array: number[]) => {
   let a = [...array];
   let steps: Step[] = [];
@@ -40,7 +47,7 @@ export const bubbleSortAlgo = (array: number[]) => {
   return steps;
 };
 
-/* ===================== SELECTION SORT ===================== */
+
 export const selectionSortAlgo = (array: number[]) => {
   let a = [...array];
   let steps: Step[] = [];
@@ -73,7 +80,6 @@ export const selectionSortAlgo = (array: number[]) => {
   return steps;
 };
 
-/* ===================== INSERTION SORT ===================== */
 export const insertionSortAlgo = (array: number[]) => {
   let a = [...array];
   let steps: Step[] = [];
@@ -111,7 +117,7 @@ export const insertionSortAlgo = (array: number[]) => {
   return steps;
 };
 
-/* ===================== MERGE SORT ===================== */
+
 export const mergeSortAlgo = (array: number[]) => {
   let a = [...array];
   let steps: Step[] = [];
@@ -174,7 +180,6 @@ export const mergeSortAlgo = (array: number[]) => {
   return steps;
 };
 
-/* ===================== QUICK SORT ===================== */
 export const quickSortAlgo = (array: number[]) => {
   let a = [...array];
   let steps: Step[] = [];

@@ -127,7 +127,7 @@ export function GraphAnalyzer() {
               return (
                 <g key={i} className="node-graph">
                   <circle cx={x} cy={y} r="18" fill={color} />
-                  <text x={x} y={y + 5} textAnchor="middle" fill="#fff">
+                  <text x={x} y={y + 5} textAnchor="middle" fill="#fffff">
                     {i}
                   </text>
                 </g>

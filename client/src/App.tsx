@@ -7,7 +7,7 @@ function App() {
     <>
       <Routes>
         <Route
-          path="/sorting-analyzer"
+          path="/ "
           element={<SortingAnalyzer/>}
         />
         <Route

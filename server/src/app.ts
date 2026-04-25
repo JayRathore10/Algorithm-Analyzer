@@ -1,5 +1,6 @@
 import express  , {Request , Response} from "express";
 import sortRouter from "./routes/sort.routes";
+import graphRouter from "./routes/graph.routes";
 import cors from "cors";``
 
 const app = express();
@@ -16,5 +17,6 @@ app.get("/"  , (req : Request, res : Response)=>{
 })
 
 app.use("/api/sort"  , sortRouter);
+app.use("/api/graph/" , graphRouter);
 
 export default app;

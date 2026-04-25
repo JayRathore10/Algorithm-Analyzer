@@ -264,7 +264,7 @@ const algoInfoMap: Record<string, AlgoInfo> = {
   },
 };
 
-export const bubbleSort = async (req: Request, res: Response, next: NextFunction) => {
+export const sorting = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { array } = req.body;
     const { algo } = req.params;

@@ -68,26 +68,103 @@ export const dijkstraAlgo = (
   return steps;
 };
 
-export const graphAlgo = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+type KruskalStep = {
+  edge?: [number, number, number];
+  mstEdges?: [number, number, number][];
+  totalWeight?: number;
+  accepted?: boolean;
+};
+
+export const kruskalAlgo = (
+  n: number,
+  edges: [number, number, number][]
 ) => {
+  const steps: KruskalStep[] = [];
+
+  edges.sort((a, b) => a[2] - b[2]);
+
+  const parent = Array.from({ length: n }, (_, i) => i);
+  const rank = Array(n).fill(0);
+
+  const find = (x: number): number => {
+    if (parent[x] !== x) parent[x] = find(parent[x]);
+    return parent[x];
+  };
+
+  const union = (x: number, y: number): boolean => {
+    const px = find(x);
+    const py = find(y);
+
+    if (px === py) return false;
+
+    if (rank[px] < rank[py]) parent[px] = py;
+    else if (rank[px] > rank[py]) parent[py] = px;
+    else {
+      parent[py] = px;
+      rank[px]++;
+    }
+
+    return true;
+  };
+
+  const mstEdges: [number, number, number][] = [];
+  let totalWeight = 0;
+
+  for (const edge of edges) {
+    const [u, v, w] = edge;
+
+    const accepted = union(u, v);
+
+    if (accepted) {
+      mstEdges.push(edge);
+      totalWeight += w;
+    }
+
+    steps.push({
+      edge,
+      mstEdges: [...mstEdges],
+      totalWeight,
+      accepted, 
+    });
+  }
+
+  steps.push({
+    mstEdges: [...mstEdges],
+    totalWeight,
+  });
+
+  return steps;
+};
+
+export const graphAlgo = async (req: Request , res: Response , next: NextFunction) => {
   try {
     const { n, edges, source } = req.body;
-
-    if (!n || !edges || source === undefined) {
+    const {algo} = req.params;
+    if (!n || !edges) {
       throw new Error("Missing inputs");
     }
 
-    const steps = dijkstraAlgo(n, edges, source);
+    let result;
 
-    res.json({
-      steps,
-      timeComplexity: "O((V + E) log V)",
-      spaceComplexity: "O(V)",
-    });
+    if (algo === "dijkstra") {
+      if (source === undefined) throw new Error("Source required");
+      result = {
+        steps: dijkstraAlgo(n, edges, source),
+        timeComplexity: "O((V + E) log V)",
+        spaceComplexity: "O(V)",
+      };
+    } else if (algo === "kruskal") {
+      result = {
+        steps: kruskalAlgo(n, edges),
+        timeComplexity: "O(E log E)",
+        spaceComplexity: "O(V)",
+      };
+    } else {
+      throw new Error("Invalid algorithm type");
+    }
+
+    res.json(result);
   } catch (err) {
     next(err);
   }
-};  
+};

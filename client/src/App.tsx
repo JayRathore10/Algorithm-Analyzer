@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { SortingAnalyzer } from "./pages/SortingAnalyzer";
-import { GraphAnalyzer } from "./pages/GraphAnalyzer";
+import {DijkstraAnalyzer } from "./pages/DijkstraAnalyze";
 
 function App() {
   return(
@@ -11,8 +11,8 @@ function App() {
           element={<SortingAnalyzer/>}
         />
         <Route
-          path="/graph-analyzer"
-          element={<GraphAnalyzer/>}
+          path="/dijkstra-analyzer"
+          element={<DijkstraAnalyzer/>}
         />
       </Routes>
     </>

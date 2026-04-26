@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/pages/GraphAnalyzer.css";
+import "../styles/pages/DijkstraAnalyze.css";
 
 type Step = {
   currentNode?: number;
@@ -8,7 +8,7 @@ type Step = {
   distances?: Record<number, number>;
 };
 
-export function GraphAnalyzer() {
+export function DijkstraAnalyzer() {
   const [n, setN] = useState("");
   const [edges, setEdges] = useState("");
   const [source, setSource] = useState("");

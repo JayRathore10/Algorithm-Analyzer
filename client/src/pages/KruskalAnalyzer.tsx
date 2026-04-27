@@ -209,3 +209,5 @@ export function KruskalAnalyzer() {
     </div>
   );
 } 
+
+/* Have to add prism and some of others */

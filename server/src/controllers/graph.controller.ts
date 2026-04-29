@@ -1,31 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-
-type Step = {
-  currentNode?: number;
-  visited?: number[];
-  distances?: Record<number, number>;
-};
-
-type PrimStep = {
-  currentNode?: number;
-  visited?: number[];
-  mstEdges?: [number, number, number][];
-  totalWeight?: number;
-};
-
-
-type KruskalStep = {
-  edge?: [number, number, number];
-  mstEdges?: [number, number, number][];
-  totalWeight?: number;
-  accepted?: boolean;
-};
-
-type BFSStep = {
-  currentNode?: number;
-  visited?: number[];
-  queue?: number[];
-};
+import { Step , PrimStep , KruskalStep , BFSStep } from "../types/algo.type";
 
 export const dijkstraAlgo = (
   n: number,

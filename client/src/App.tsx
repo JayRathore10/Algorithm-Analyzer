@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { SortingAnalyzer } from "./pages/SortingAnalyzer";
 import {DijkstraAnalyzer } from "./pages/DijkstraAnalyze";
 import { KruskalAnalyzer } from "./pages/KruskalAnalyzer";
+import { PrimsAnalyzer } from "./pages/PrismAnalyzer";
 
 function App() {
   return(
@@ -18,6 +19,10 @@ function App() {
         <Route
           path="/kruskal-analyzer"
           element={<KruskalAnalyzer/>}
+        />
+        <Route
+          path="/prism-analyzer"
+          element={<PrimsAnalyzer/>}
         />
       </Routes>
     </>

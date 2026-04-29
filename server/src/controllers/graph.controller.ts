@@ -6,6 +6,22 @@ type Step = {
   distances?: Record<number, number>;
 };
 
+type PrimStep = {
+  currentNode?: number;
+  visited?: number[];
+  mstEdges?: [number, number, number][];
+  totalWeight?: number;
+};
+
+
+type KruskalStep = {
+  edge?: [number, number, number];
+  mstEdges?: [number, number, number][];
+  totalWeight?: number;
+  accepted?: boolean;
+};
+
+
 export const dijkstraAlgo = (
   n: number,
   edges: [number, number, number][],
@@ -14,7 +30,6 @@ export const dijkstraAlgo = (
   const adj: Record<number, [number, number][]> = {};
   const steps: Step[] = [];
 
-  // build graph
   for (let i = 0; i < n; i++) adj[i] = [];
 
   for (const [u, v, w] of edges) {
@@ -58,7 +73,6 @@ export const dijkstraAlgo = (
     }
   }
 
-  // final clean step
   steps.push({
     currentNode: -1,
     visited: [...visited],
@@ -66,13 +80,6 @@ export const dijkstraAlgo = (
   });
 
   return steps;
-};
-
-type KruskalStep = {
-  edge?: [number, number, number];
-  mstEdges?: [number, number, number][];
-  totalWeight?: number;
-  accepted?: boolean;
 };
 
 export const kruskalAlgo = (
@@ -124,7 +131,7 @@ export const kruskalAlgo = (
       edge,
       mstEdges: [...mstEdges],
       totalWeight,
-      accepted, 
+      accepted,
     });
   }
 
@@ -136,10 +143,72 @@ export const kruskalAlgo = (
   return steps;
 };
 
-export const graphAlgo = async (req: Request , res: Response , next: NextFunction) => {
+export const primsAlgo = (
+  n: number,
+  edges: [number, number, number][]
+) => {
+  const adj: Record<number, [number, number][]> = {};
+  const steps: PrimStep[] = [];
+
+  // build graph
+  for (let i = 0; i < n; i++) adj[i] = [];
+
+  for (const [u, v, w] of edges) {
+    adj[u].push([v, w]);
+    adj[v].push([u, w]);
+  }
+
+  const visited: boolean[] = Array(n).fill(false);
+  const mstEdges: [number, number, number][] = [];
+  let totalWeight = 0;
+
+  // [weight, node, parent]
+  const pq: [number, number, number][] = [[0, 0, -1]];
+
+  while (pq.length) {
+    pq.sort((a, b) => a[0] - b[0]);
+    const [weight, node, parent] = pq.shift()!;
+
+    if (visited[node]) continue;
+
+    visited[node] = true;
+
+    if (parent !== -1) {
+      mstEdges.push([parent, node, weight]);
+      totalWeight += weight;
+    }
+
+    steps.push({
+      currentNode: node,
+      visited: visited
+        .map((v, i) => (v ? i : -1))
+        .filter((v) => v !== -1),
+      mstEdges: [...mstEdges],
+      totalWeight,
+    });
+
+    for (const [nei, w] of adj[node]) {
+      if (!visited[nei]) {
+        pq.push([w, nei, node]);
+      }
+    }
+  }
+
+  steps.push({
+    visited: visited
+      .map((v, i) => (v ? i : -1))
+      .filter((v) => v !== -1),
+    mstEdges: [...mstEdges],
+    totalWeight,
+  });
+
+  return steps;
+};
+
+export const graphAlgo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { n, edges, source } = req.body;
-    const {algo} = req.params;
+    const { algo } = req.params;
     if (!n || !edges) {
       throw new Error("Missing inputs");
     }
@@ -157,6 +226,12 @@ export const graphAlgo = async (req: Request , res: Response , next: NextFunctio
       result = {
         steps: kruskalAlgo(n, edges),
         timeComplexity: "O(E log E)",
+        spaceComplexity: "O(V)",
+      };
+    } else if (algo === "prims") {
+      result = {
+        steps: primsAlgo(n, edges),
+        timeComplexity: "O((V + E) log V)",
         spaceComplexity: "O(V)",
       };
     } else {

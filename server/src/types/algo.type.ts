@@ -23,3 +23,8 @@ export type BFSStep = {
   visited?: number[];
   queue?: number[];
 };
+
+export type DFSStep = {
+  currentNode?: number;
+  visited?: number[];
+};

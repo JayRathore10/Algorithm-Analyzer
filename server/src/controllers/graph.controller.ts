@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Step , PrimStep , KruskalStep , BFSStep } from "../types/algo.type";
+import { Step, PrimStep, KruskalStep, BFSStep, DFSStep } from "../types/algo.type";
 
 export const dijkstraAlgo = (
   n: number,
@@ -242,6 +242,58 @@ export const bfsAlgo = (
   return steps;
 };
 
+export const dfsAlgo = (
+  n: number,
+  edges: [number, number, number][],
+  start: number
+) => {
+  const adj: Record<number, number[]> = {};
+  const steps: DFSStep[] = [];
+
+  for (let i = 0; i < n; i++) adj[i] = [];
+
+  for (const [u, v] of edges) {
+    adj[u].push(v);
+    adj[v].push(u);
+  }
+
+  const visited = Array(n).fill(false);
+
+  const dfs = (node: number) => {
+    visited[node] = true;
+
+    steps.push({
+      currentNode: node,
+      visited: visited
+        .map((v, i) => (v ? i : -1))
+        .filter((v) => v !== -1),
+    });
+
+    for (const nei of adj[node]) {
+      if (!visited[nei]) {
+        dfs(nei);
+
+        steps.push({
+          currentNode: node,
+          visited: visited
+            .map((v, i) => (v ? i : -1))
+            .filter((v) => v !== -1),
+        });
+      }
+    }
+  };
+
+  dfs(start);
+
+  steps.push({
+    visited: visited
+      .map((v, i) => (v ? i : -1))
+      .filter((v) => v !== -1),
+  });
+
+  return steps;
+};
+
 export const graphAlgo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { n, edges, source } = req.body;
@@ -278,10 +330,16 @@ export const graphAlgo = async (req: Request, res: Response, next: NextFunction)
         timeComplexity: "O(V + E)",
         spaceComplexity: "O(V)",
       };
+    } else if (algo === "dfs") {
+      if (source === undefined) throw new Error("Start node required");
+      result = {
+        steps: dfsAlgo(n, edges, source),
+        timeComplexity: "O(V + E)",
+        spaceComplexity: "O(V)",
+      };
     } else {
       throw new Error("Invalid algorithm type");
     }
-
 
     res.json(result);
   } catch (err) {

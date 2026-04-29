@@ -4,6 +4,7 @@ import {DijkstraAnalyzer } from "./pages/DijkstraAnalyze";
 import { KruskalAnalyzer } from "./pages/KruskalAnalyzer";
 import { PrimsAnalyzer } from "./pages/PrismAnalyzer";
 import { BFSAnalyzer } from "./pages/BFSAnalyzer";
+import { DFSAnalyzer } from "./pages/DFSAnalyzer";
 
 function App() {
   return(
@@ -28,6 +29,10 @@ function App() {
         <Route
           path="/bfs-analyzer" 
           element={<BFSAnalyzer/>}
+        />
+        <Route 
+          path="/dfs-analyzer"
+          element={<DFSAnalyzer />}
         />
       </Routes>
     </>

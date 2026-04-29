@@ -28,3 +28,8 @@ export type DFSStep = {
   currentNode?: number;
   visited?: number[];
 };
+
+export type FWStep = {
+  k: number;
+  matrix: number[][];
+};

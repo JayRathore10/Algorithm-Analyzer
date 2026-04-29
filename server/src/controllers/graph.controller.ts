@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Step, PrimStep, KruskalStep, BFSStep, DFSStep } from "../types/algo.type";
+import { Step, PrimStep, KruskalStep, BFSStep, DFSStep, FWStep } from "../types/algo.type";
 
 export const dijkstraAlgo = (
   n: number,
@@ -294,6 +294,42 @@ export const dfsAlgo = (
   return steps;
 };
 
+export const floydWarshallAlgo = (
+  n: number,
+  edges: [number, number, number][]
+) => {
+  const INF = 1e9;
+  const steps: FWStep[] = [];
+
+  const dist: number[][] = Array.from({ length: n }, () =>
+    Array(n).fill(INF)
+  );
+
+  for (let i = 0; i < n; i++) dist[i][i] = 0;
+
+  for (const [u, v, w] of edges) {
+    dist[u][v] = w;
+    dist[v][u] = w;
+  }
+
+  for (let k = 0; k < n; k++) {
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        if (dist[i][k] + dist[k][j] < dist[i][j]) {
+          dist[i][j] = dist[i][k] + dist[k][j];
+        }
+      }
+    }
+
+    steps.push({
+      k,
+      matrix: dist.map((row) => [...row]),
+    });
+  }
+
+  return steps;
+};
+
 export const graphAlgo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { n, edges, source } = req.body;
@@ -320,7 +356,7 @@ export const graphAlgo = async (req: Request, res: Response, next: NextFunction)
     } else if (algo === "prims") {
       result = {
         steps: primsAlgo(n, edges),
-        timeComplexity: "O((V + E) log V)",
+        timeComplexity: "O((V + E) log V)", 
         spaceComplexity: "O(V)",
       };
     } else if (algo === "bfs") {
@@ -336,6 +372,12 @@ export const graphAlgo = async (req: Request, res: Response, next: NextFunction)
         steps: dfsAlgo(n, edges, source),
         timeComplexity: "O(V + E)",
         spaceComplexity: "O(V)",
+      };
+    } else if (algo === "floyd-warshall") {
+      result = {
+        steps: floydWarshallAlgo(n, edges),
+        timeComplexity: "O(V^3)",
+        spaceComplexity: "O(V^2)",
       };
     } else {
       throw new Error("Invalid algorithm type");

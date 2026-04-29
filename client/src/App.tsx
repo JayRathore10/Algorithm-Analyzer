@@ -5,6 +5,7 @@ import { KruskalAnalyzer } from "./pages/KruskalAnalyzer";
 import { PrimsAnalyzer } from "./pages/PrismAnalyzer";
 import { BFSAnalyzer } from "./pages/BFSAnalyzer";
 import { DFSAnalyzer } from "./pages/DFSAnalyzer";
+import { FloydWarshallAnalyzer } from "./pages/Floyd-WarshalAnalyzer";
 
 function App() {
   return(
@@ -33,6 +34,10 @@ function App() {
         <Route 
           path="/dfs-analyzer"
           element={<DFSAnalyzer />}
+        />
+        <Route 
+          path="/floyd-Warshal-analyzer"
+          element={<FloydWarshallAnalyzer/>}
         />
       </Routes>
     </>

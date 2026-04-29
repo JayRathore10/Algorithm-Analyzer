@@ -21,6 +21,11 @@ type KruskalStep = {
   accepted?: boolean;
 };
 
+type BFSStep = {
+  currentNode?: number;
+  visited?: number[];
+  queue?: number[];
+};
 
 export const dijkstraAlgo = (
   n: number,
@@ -205,6 +210,64 @@ export const primsAlgo = (
   return steps;
 };
 
+export const bfsAlgo = (
+  n: number,
+  edges: [number, number, number][],
+  start: number
+) => {
+  const adj: Record<number, number[]> = {};
+  const steps: BFSStep[] = [];
+
+  for (let i = 0; i < n; i++) adj[i] = [];
+
+  for (const [u, v] of edges) {
+    adj[u].push(v);
+    adj[v].push(u);
+  }
+
+  const visited = Array(n).fill(false);
+  const queue: number[] = [];
+
+  visited[start] = true;
+  queue.push(start);
+
+  while (queue.length) {
+    const node = queue.shift()!;
+
+    steps.push({
+      currentNode: node,
+      visited: visited
+        .map((v, i) => (v ? i : -1))
+        .filter((v) => v !== -1),
+      queue: [...queue],
+    });
+
+    for (const nei of adj[node]) {
+      if (!visited[nei]) {
+        visited[nei] = true;
+        queue.push(nei);
+
+        steps.push({
+          currentNode: node,
+          visited: visited
+            .map((v, i) => (v ? i : -1))
+            .filter((v) => v !== -1),
+          queue: [...queue],
+        });
+      }
+    }
+  }
+
+  steps.push({
+    visited: visited
+      .map((v, i) => (v ? i : -1))
+      .filter((v) => v !== -1),
+    queue: [],
+  });
+
+  return steps;
+};
+
 export const graphAlgo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { n, edges, source } = req.body;
@@ -234,9 +297,17 @@ export const graphAlgo = async (req: Request, res: Response, next: NextFunction)
         timeComplexity: "O((V + E) log V)",
         spaceComplexity: "O(V)",
       };
+    } else if (algo === "bfs") {
+      if (source === undefined) throw new Error("Start node required");
+      result = {
+        steps: bfsAlgo(n, edges, source),
+        timeComplexity: "O(V + E)",
+        spaceComplexity: "O(V)",
+      };
     } else {
       throw new Error("Invalid algorithm type");
     }
+
 
     res.json(result);
   } catch (err) {

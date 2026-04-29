@@ -3,6 +3,7 @@ import { SortingAnalyzer } from "./pages/SortingAnalyzer";
 import {DijkstraAnalyzer } from "./pages/DijkstraAnalyze";
 import { KruskalAnalyzer } from "./pages/KruskalAnalyzer";
 import { PrimsAnalyzer } from "./pages/PrismAnalyzer";
+import { BFSAnalyzer } from "./pages/BFSAnalyzer";
 
 function App() {
   return(
@@ -23,6 +24,10 @@ function App() {
         <Route
           path="/prism-analyzer"
           element={<PrimsAnalyzer/>}
+        />
+        <Route
+          path="/bfs-analyzer" 
+          element={<BFSAnalyzer/>}
         />
       </Routes>
     </>

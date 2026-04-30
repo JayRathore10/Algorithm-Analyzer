@@ -107,3 +107,5 @@ export function FloydWarshallAnalyzer() {
 </div>
   );
 }
+
+/** Add all other algos */

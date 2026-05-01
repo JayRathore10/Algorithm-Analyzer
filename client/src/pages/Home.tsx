@@ -114,7 +114,14 @@ export function Home() {
           >
             <div className="media">
               <img src={algo.image} className="media-img" />
-              <video src={algo.video} muted loop className="media-video" />
+              <video
+                src={algo.video}
+                muted
+                loop
+                autoPlay
+                playsInline
+                className="media-video"
+              />
             </div>
 
             <div className="info">

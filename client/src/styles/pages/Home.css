@@ -53,17 +53,35 @@
 }
 
 .media {
-  height: 160px;
-  background: #f8f9fa;
+  position: relative;
+  height: 180px;
   overflow: hidden;
 }
 
-.media img,
-.media video {
+.media-img,
+.media-video {
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: all 0.3s ease;
+  top: 0;
+  left: 0;
+}
+
+/* hide video initially */
+.media-video {
+  opacity: 0;
+  transition: 0.3s ease;
+}
+
+/* show video on hover */
+.card:hover .media-video {
+  opacity: 1;
+}
+
+/* hide image on hover */
+.card:hover .media-img {
+  opacity: 0;
 }
 
 .card:hover .media img,

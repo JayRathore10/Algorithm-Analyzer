@@ -1,6 +1,7 @@
 import express  , {Request , Response} from "express";
 import sortRouter from "./routes/sort.routes";
 import graphRouter from "./routes/graph.routes";
+import searchingRouter from "./routes/searching.routes";
 import cors from "cors";``
 
 const app = express();
@@ -18,5 +19,6 @@ app.get("/"  , (req : Request, res : Response)=>{
 
 app.use("/api/sort"  , sortRouter);
 app.use("/api/graph/" , graphRouter);
+app.use("/api/searching" , searchingRouter);
 
 export default app;

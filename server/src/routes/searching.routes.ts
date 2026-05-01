@@ -4,3 +4,5 @@ import { searching } from "../controllers/searching.controller";
 const router = Router();
 
 router.post("/:algo" , searching);
+
+export default router;

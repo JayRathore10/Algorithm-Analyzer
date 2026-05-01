@@ -55,7 +55,7 @@ export function BinarySearchAnalyzer() {
       setCurrentStep(null);
 
       const res = await axios.post(
-        "http://localhost:3000/api/binary-search",
+        "http://localhost:3000/api/searching/binary-search",
         {
           arr: parsedArr,
           target: Number(target),

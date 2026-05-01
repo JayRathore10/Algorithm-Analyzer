@@ -30,7 +30,7 @@
   box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
 }
 
-.grid {
+.home-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.8rem;

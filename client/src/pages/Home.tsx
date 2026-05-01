@@ -1,5 +1,6 @@
 import { useState } from "react";
-import "../styles/pages/Home.css";  
+import { useNavigate } from "react-router-dom";
+import "../styles/pages/Home.css";
 
 type Algo = {
   name: string;
@@ -7,70 +8,87 @@ type Algo = {
   description: string;
   image: string;
   video: string;
+  category: string;
 };
 
 const algorithms: Algo[] = [
   {
+    name: "Sorting",
+    route: "/sorting-analyzer",
+    description: "Visualize multiple sorting algorithms",
+    image: "/assets/screenshots/sorting.png",
+    video: "/assets/videos/sorting.mp4",
+    category: "Sorting",
+  },
+  {
     name: "Binary Search",
-    route: "/search/binary",
+    route: "/binary-search-analyzer",
     description: "Efficient search in sorted array",
-    image: "/assets/binary.png",
-    video: "/assets/binary.mp4",
+    image: "/assets/screenshots/binary.png",
+    video: "/assets/videos/binary.mp4",
+    category: "Searching",
   },
   {
     name: "Linear Search",
-    route: "/search/linear",
+    route: "/linear-search-analyzer",
     description: "Simple sequential search",
-    image: "/assets/linear.png",
-    video: "/assets/linear.mp4",
+    image: "/assets/screenshots/linear.png",
+    video: "/assets/videos/linear.mp4",
+    category: "Searching",
   },
   {
     name: "BFS",
-    route: "/graph/bfs",
+    route: "/bfs-analyzer",
     description: "Level order traversal of graph",
-    image: "/assets/bfs.png",
-    video: "/assets/bfs.mp4",
+    image: "/assets/screenshots/bfs.png",
+    video: "/assets/videos/bfs.mp4",
+    category: "Graph",
   },
   {
     name: "DFS",
-    route: "/graph/dfs",
+    route: "/dfs-analyzer",
     description: "Depth-first traversal",
-    image: "/assets/dfs.png",
-    video: "/assets/dfs.mp4",
+    image: "/assets/screenshots/dfs.png",
+    video: "/assets/videos/dfs.mp4",
+    category: "Graph",
   },
   {
     name: "Dijkstra",
-    route: "/graph/dijkstra",
+    route: "/dijkstra-analyzer",
     description: "Shortest path algorithm",
-    image: "/assets/dijkstra.png",
-    video: "/assets/dijkstra.mp4",
+    image: "/assets/screenshots/dijkstra.png",
+    video: "/assets/videos/dijkstra.mp4",
+    category: "Graph",
   },
   {
     name: "Kruskal",
-    route: "/graph/kruskal",
+    route: "/kruskal-analyzer",
     description: "Minimum Spanning Tree",
-    image: "/assets/kruskal.png",
-    video: "/assets/kruskal.mp4",
+    image: "/assets/screenshots/kruskal.png",
+    video: "/assets/videos/kruskal.mp4",
+    category: "Graph",
   },
   {
     name: "Prim",
-    route: "/graph/prims",
+    route: "/prism-analyzer",
     description: "Greedy MST algorithm",
-    image: "/assets/prim.png",
-    video: "/assets/prim.mp4",
+    image: "/assets/screenshots/prim.png",
+    video: "/assets/videos/prim.mp4",
+    category: "Graph",
   },
   {
     name: "Floyd Warshall",
-    route: "/graph/floyd",
+    route: "/floyd-Warshal-analyzer",
     description: "All-pairs shortest path",
-    image: "/assets/fw.png",
-    video: "/assets/fw.mp4",
+    image: "/assets/screenshots/fw.png",
+    video: "/assets/videos/fw.mp4",
+    category: "Graph",
   },
 ];
 
 export function Home() {
   const [search, setSearch] = useState("");
-  const [hovered, setHovered] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const filtered = algorithms.filter((algo) =>
     algo.name.toLowerCase().includes(search.toLowerCase())
@@ -87,38 +105,22 @@ export function Home() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="grid">
+      <div className="home-grid">
         {filtered.map((algo) => (
           <div
             key={algo.name}
-            className={`card ${
-              hovered === algo.name ? "card-hover" : ""
-            }`}
-            onMouseEnter={() => setHovered(algo.name)}
-            onMouseLeave={() => setHovered(null)}
-            onClick={() => (window.location.href = algo.route)}
+            className="card"
+            onClick={() => navigate(algo.route)}
           >
             <div className="media">
-              {hovered === algo.name ? (
-                <video
-                  src={algo.video}
-                  autoPlay
-                  loop
-                  muted
-                  className="media-content"
-                />
-              ) : (
-                <img
-                  src={algo.image}
-                  alt={algo.name}
-                  className="media-content"
-                />
-              )}
+              <img src={algo.image} className="media-img" />
+              <video src={algo.video} muted loop className="media-video" />
             </div>
 
             <div className="info">
               <h3>{algo.name}</h3>
               <p>{algo.description}</p>
+              <span className="badge">{algo.category}</span>
             </div>
           </div>
         ))}

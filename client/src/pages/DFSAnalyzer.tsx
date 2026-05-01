@@ -16,6 +16,9 @@ export function DFSAnalyzer() {
   const [currentStep, setCurrentStep] = useState<Step | null>(null);
   const [graphEdges, setGraphEdges] = useState<[number, number, number][]>([]);
 
+  const [speed, setSpeed] = useState(800);
+  const [isPlaying, setIsPlaying] = useState(true);
+
   const getPosition = (i: number) => {
     const total = Number(n) || 1;
     const radius = 120;
@@ -33,20 +36,28 @@ export function DFSAnalyzer() {
     if (!steps.length) return;
 
     let i = 0;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCurrentStep(steps[0]);
+    let cancelled = false;
 
-    const interval = setInterval(() => {
-      i++;
-      if (i >= steps.length) {
-        clearInterval(interval);
+    const run = () => {
+      if (cancelled || i >= steps.length) return;
+
+      if (!isPlaying) {
+        setTimeout(run, 100);
         return;
       }
-      setCurrentStep(steps[i]);
-    }, 800);
 
-    return () => clearInterval(interval);
-  }, [steps]);
+      setCurrentStep(steps[i]);
+      i++;
+
+      setTimeout(run, speed);
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [steps, speed, isPlaying]);
 
   const handleRun = async () => {
     try {
@@ -87,7 +98,24 @@ export function DFSAnalyzer() {
 
   return (
     <div className="app-graph">
-      <h1 className="title-graph">DFS Visualizer</h1>
+      <h1 className="title-graph">
+        DFS Visualizer
+        <span
+          style={{
+            marginLeft: "10px",
+            cursor: "pointer",
+            border: "1px solid #999",
+            borderRadius: "50%",
+            padding: "2px 6px",
+            fontSize: "12px",
+          }}
+          title={`Red → Current Node
+Green → Visited Node
+Blue → Unvisited Node`}
+        >
+          i
+        </span>
+      </h1>
 
       <div className="controls-graph">
         <input
@@ -111,6 +139,25 @@ export function DFSAnalyzer() {
         <button className="btn-graph" onClick={handleRun}>
           Run
         </button>
+        <button
+          className="btn-graph"
+          onClick={() => setIsPlaying(!isPlaying)}
+        >
+          {isPlaying ? "Pause" : "Play"}
+        </button>
+      </div>
+
+      <div style={{ marginTop: "10px" }}>
+        <input
+          type="range"
+          min="1"
+          max="10"
+          value={Math.floor((2100 - speed) / 200)}
+          onChange={(e) =>
+            setSpeed(2100 - Number(e.target.value) * 200)
+          }
+        />
+        <span> {speed} ms</span>
       </div>
 
       <div className="graph-box-graph">

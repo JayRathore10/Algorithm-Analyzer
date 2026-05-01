@@ -81,7 +81,24 @@ export function BinarySearchAnalyzer() {
 
   return (
     <div className="app-graph">
-      <h1 className="title-graph">Binary Search Visualizer</h1>
+      <h1 className="title-graph">
+        Binary Search Visualizer
+        <span
+          style={{
+            marginLeft: "10px",
+            cursor: "pointer",
+            border: "1px solid #999",
+            borderRadius: "50%",
+            padding: "2px 6px",
+            fontSize: "12px",
+          }}
+          title={`Red → Mid Element
+Green → Current Search Range
+Grey → Discarded Elements`}
+        >
+          i
+        </span>
+      </h1>
 
       <div className="controls-graph">
         <input

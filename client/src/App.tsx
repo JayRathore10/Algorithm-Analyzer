@@ -7,6 +7,7 @@ import { BFSAnalyzer } from "./pages/BFSAnalyzer";
 import { DFSAnalyzer } from "./pages/DFSAnalyzer";
 import { FloydWarshallAnalyzer } from "./pages/Floyd-WarshalAnalyzer";
 import { BinarySearchAnalyzer } from "./pages/BinarySearchAnalyzer";
+import { LinearSearchAnalyzer } from "./pages/LinearSearchAnalyzer";
 
 function App() {
   return(
@@ -43,6 +44,10 @@ function App() {
         <Route
           path="/binary-search-analyzer"
           element={<BinarySearchAnalyzer/>} 
+        />
+        <Route
+          path="/linear-search-analyzer"
+          element={<LinearSearchAnalyzer/>}
         />
       </Routes>
     </>

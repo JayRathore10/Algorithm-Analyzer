@@ -33,3 +33,17 @@ export type FWStep = {
   k: number;
   matrix: number[][];
 };
+
+export type BS_Steps={
+  left: number;
+  right: number;
+  mid: number;
+  value: number;
+  found: boolean;
+}
+
+export type LS_Steps = {
+  index: number;
+  value: number;
+  found: boolean;
+};

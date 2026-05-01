@@ -1,15 +1,8 @@
-import { Request  , Response , NextFunction } from "express";
-
-type Step = {
-  left: number;
-  right: number;
-  mid: number;
-  value: number;
-  found: boolean;
-};
+import { Request, Response, NextFunction } from "express";
+import { BS_Steps, LS_Steps } from "../types/algo.type";
 
 const binarySearchAlgo = (arr: number[], target: number) => {
-  const steps: Step[] = [];
+  const steps: BS_Steps[] = [];
 
   let left = 0;
   let right = arr.length - 1;
@@ -33,6 +26,24 @@ const binarySearchAlgo = (arr: number[], target: number) => {
   return steps;
 };
 
+const linearSearchAlgo = (arr: number[], target: number) => {
+  const steps: LS_Steps[] = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    const found = arr[i] === target;
+
+    steps.push({
+      index: i,
+      value: arr[i],
+      found,
+    });
+
+    if (found) break;
+  }
+
+  return steps;
+};
+
 export const searching = async (
   req: Request,
   res: Response,
@@ -50,13 +61,21 @@ export const searching = async (
 
     switch (algo) {
       case "binary-search": {
-        // ensure sorted array
         const sorted = [...arr].sort((a, b) => a - b);
 
         result = {
           steps: binarySearchAlgo(sorted, target),
           sortedArray: sorted,
           timeComplexity: "O(log n)",
+          spaceComplexity: "O(1)",
+        };
+        break;
+      }
+
+      case "linear-search": {
+        result = {
+          steps: linearSearchAlgo(arr, target),
+          timeComplexity: "O(n)",
           spaceComplexity: "O(1)",
         };
         break;

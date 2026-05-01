@@ -18,24 +18,35 @@ export function BinarySearchAnalyzer() {
   const [steps, setSteps] = useState<Step[]>([]);
   const [currentStep, setCurrentStep] = useState<Step | null>(null);
 
+  const [speed, setSpeed] = useState(800);
+  const [isPlaying, setIsPlaying] = useState(true);
+
   useEffect(() => {
     if (!steps.length) return;
 
     let i = 0;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCurrentStep(steps[0]);
+    let cancelled = false;
 
-    const interval = setInterval(() => {
-      i++;
-      if (i >= steps.length) {
-        clearInterval(interval);
+    const run = () => {
+      if (cancelled || i >= steps.length) return;
+
+      if (!isPlaying) {
+        setTimeout(run, 100);
         return;
       }
-      setCurrentStep(steps[i]);
-    }, 700);
 
-    return () => clearInterval(interval);
-  }, [steps]);
+      setCurrentStep(steps[i]);
+      i++;
+
+      setTimeout(run, speed);
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [steps, speed, isPlaying]);
 
   const handleRun = async () => {
     try {
@@ -48,7 +59,7 @@ export function BinarySearchAnalyzer() {
         return;
       }
 
-      parsedArr.sort((a, b) => a - b); // important
+      parsedArr.sort((a, b) => a - b);
 
       setArr(parsedArr);
       setSteps([]);
@@ -85,12 +96,39 @@ export function BinarySearchAnalyzer() {
           onChange={(e) => setTarget(e.target.value)}
           placeholder="Target"
         />
+
         <button className="btn-graph" onClick={handleRun}>
           Run
         </button>
+
+        <button
+          className="btn-graph"
+          onClick={() => setIsPlaying(!isPlaying)}
+        >
+          {isPlaying ? "Pause" : "Play"}
+        </button>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
+      <div style={{ marginTop: "10px" }}>
+        <input
+          type="range"
+          min="1"
+          max="10"
+          value={Math.floor((2100 - speed) / 200)}
+          onChange={(e) =>
+            setSpeed(2100 - Number(e.target.value) * 200)
+          }
+        />
+        <span> {speed} ms</span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "30px",
+        }}
+      >
         {arr.map((num, i) => {
           const isMid = i === currentStep?.mid;
           const inRange =

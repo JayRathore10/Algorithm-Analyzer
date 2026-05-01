@@ -16,16 +16,39 @@ export function SortingAnalyzer() {
   const [sc, setSc] = useState("");
   const [comparing, setComparing] = useState<number[]>([]);
 
+  const [speed, setSpeed] = useState(100);
+  const [isPlaying, setIsPlaying] = useState(true);
+
   useEffect(() => {
-    const call = async () => {
-      try {
-        await axios.get(`http://localhost:3000`);
-      } catch (error) {
-        console.log(error);
+    if (!steps.length) return;
+
+    let i = 0;
+    let cancelled = false;
+
+    const run = () => {
+      if (cancelled || i >= steps.length) {
+        setComparing([]);
+        return;
       }
+
+      if (!isPlaying) {
+        setTimeout(run, 100);
+        return;
+      }
+
+      setCurrentStep(steps[i].array);
+      setComparing(steps[i].comparing || []);
+      i++;
+
+      setTimeout(run, speed);
     };
-    call();
-  }, []);
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [steps, speed, isPlaying]);
 
   const handleSort = async () => {
     if (!algo) {
@@ -39,46 +62,52 @@ export function SortingAnalyzer() {
     }
 
     try {
+      const parsed = array.split(",").map(Number);
+
+      if (parsed.some(Number.isNaN)) {
+        alert("Invalid input");
+        return;
+      }
+
+      setSteps([]);
+      setCurrentStep([]);
+      setComparing([]);
+
       const res = await axios.post(
         `http://localhost:3000/api/sort/${algo}`,
-        {
-          array: array.split(",").map(Number),
-        }
+        { array: parsed }
       );
 
       setSteps(res.data.steps);
       setTc(res.data.timeComplexity);
       setSc(res.data.spaceComplexity);
-    } catch (err) {
-      console.log(err);
+    } catch {
+      alert("Server error");
     }
   };
 
-  useEffect(() => {
-    if (steps.length === 0) return;
-
-    let i = 0;
-
-    const interval = setInterval(() => {
-      if (i >= steps.length) {
-        setComparing([]);
-        clearInterval(interval);
-        return;
-      }
-
-      setCurrentStep(steps[i].array);
-      setComparing(steps[i].comparing || []);
-      i++;
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [steps]);
-
   const maxVal = Math.max(...currentStep, 1);
-  // const maxVal = currentStep.length ? Math.max(...currentStep) : 1;
+
   return (
     <div className="app">
-      <h1 className="hd">Sorting Analyzer</h1>
+      <h1 className="hd">
+        Sorting Analyzer
+        <span
+          style={{
+            marginLeft: "10px",
+            cursor: "pointer",
+            border: "1px solid #999",
+            borderRadius: "50%",
+            padding: "2px 6px",
+            fontSize: "12px",
+          }}
+          title={`Red → Elements being compared
+Blue → Normal elements
+Bars show relative values`}
+        >
+          i
+        </span>
+      </h1>
 
       <div className="ct">
         <input
@@ -93,35 +122,29 @@ export function SortingAnalyzer() {
           value={algo}
           onChange={(e) => setAlgo(e.target.value)}
         >
-          <option className="opt" value="">
-            Select Algorithm
-          </option>
-          <option className="opt" value="bubble-sort">
-            Bubble Sort
-          </option>
-          <option className="opt" value="selection-sort">
-            Selection Sort
-          </option>
-          <option className="opt" value="insertion-sort">
-            Insertion Sort
-          </option>
-          <option className="opt" value="merge-sort">
-            Merge Sort
-          </option>
-          <option className="opt" value="quick-sort">
-            Quick Sort
-          </option>
+          <option value="">Select Algorithm</option>
+          <option value="bubble-sort">Bubble Sort</option>
+          <option value="selection-sort">Selection Sort</option>
+          <option value="insertion-sort">Insertion Sort</option>
+          <option value="merge-sort">Merge Sort</option>
+          <option value="quick-sort">Quick Sort</option>
         </select>
 
         <button className="btn" onClick={handleSort}>
           Sort
         </button>
-      </div>
 
+        <button
+          className="btn"
+          onClick={() => setIsPlaying(!isPlaying)}
+        >
+          {isPlaying ? "Pause" : "Play"}
+        </button>
+      </div>
       <div className="grid">
         <div className="left">
           <div className="box">
-            <h3 className="sub">Sorted Array</h3>
+            <h3 className="sub">Current Array</h3>
             <div className="arr">
               {currentStep.map((num, i) => (
                 <span key={i} className="tag">
@@ -140,6 +163,19 @@ export function SortingAnalyzer() {
               <strong className="lbl">Space Complexity</strong>
               <p className="val">{sc}</p>
             </div>
+          </div>
+
+          <div style={{ marginTop: "10px" }}>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={Math.floor((1100 - speed) / 100)}
+              onChange={(e) =>
+                setSpeed(1100 - Number(e.target.value) * 100)
+              }
+            />
+            <span> {speed} ms</span>
           </div>
         </div>
 

@@ -1,0 +1,122 @@
+.home {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.home-title {
+  color: #4361ee;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.7rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  margin-bottom: 2rem;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #4361ee;
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.8rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+.media {
+  height: 160px;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+.media img,
+.media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.card:hover .media img,
+.card:hover .media video {
+  transform: scale(1.05);
+}
+
+.info {
+  padding: 1rem;
+  text-align: left;
+}
+
+.info h3 {
+  color: #070f7c;
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.info p {
+  color: #4a5568;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: #4361ee;
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+.media video {
+  opacity: 0;
+}
+
+.card:hover .media video {
+  opacity: 1;
+}
+
+.card:hover .media img {
+  opacity: 0;
+}
+
+@media (max-width: 600px) {
+  .home-title {
+    font-size: 2rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

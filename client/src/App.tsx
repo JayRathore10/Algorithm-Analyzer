@@ -8,11 +8,16 @@ import { DFSAnalyzer } from "./pages/DFSAnalyzer";
 import { FloydWarshallAnalyzer } from "./pages/Floyd-WarshalAnalyzer";
 import { BinarySearchAnalyzer } from "./pages/BinarySearchAnalyzer";
 import { LinearSearchAnalyzer } from "./pages/LinearSearchAnalyzer";
+import { Home } from "./pages/Home";
 
 function App() {
   return(
     <>
       <Routes>
+        <Route 
+          path="/"
+          element={<Home/>}
+        />
         <Route
           path="/sorting-analyzer"
           element={<SortingAnalyzer/>}

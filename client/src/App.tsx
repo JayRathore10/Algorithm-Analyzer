@@ -60,5 +60,3 @@ function App() {
 }
 
 export default App
-
-// add grid that show all the algos i have 
